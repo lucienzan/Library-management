@@ -1,0 +1,16 @@
+{
+  "resources":[
+    {
+      "id":1,
+      "title":"resource1",
+      "description":"Atomic habbit",
+      "categories": ["self Help"]
+    },
+    {
+      "id":2,
+      "title":"resource2",
+      "description":"Note to self",
+      "categories": ["Biography"]
+    }
+  ]
+}
