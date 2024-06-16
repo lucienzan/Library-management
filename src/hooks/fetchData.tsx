@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { Resources } from "../types/resources";
 
 function FetchData(url:string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<Resources | null>(null);
 
   useEffect(() => {
     const abortController: AbortController = new AbortController();
