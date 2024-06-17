@@ -1,16 +1,30 @@
 {
-  "resources":[
+  "resources": [
     {
-      "id":"c3f2f9bb-67cb-4fa6-831b-906577f62955",
-      "title":"resource1",
-      "description":"Atomic habbit",
-      "categories": ["self Help", "Testing"]
+      "id": "c3f2f9bb-67cb-4fa6-831b-906577f62955",
+      "title": "resource1",
+      "description": "Atomic habbit",
+      "categories": [
+        "self Help",
+        "Testing"
+      ]
     },
     {
-      "id":"29f9ad29-6c94-4cd8-b357-2cbd69ceb422",
-      "title":"resource2",
-      "description":"Note to self",
-      "categories": ["Biography"]
+      "id": "29f9ad29-6c94-4cd8-b357-2cbd69ceb422",
+      "title": "resource2",
+      "description": "Note to self",
+      "categories": [
+        "Biography"
+      ]
+    },
+    {
+      "title": "Hello",
+      "description": "hi",
+      "categories": [
+        "self Help",
+        "Biography"
+      ],
+      "id": "fKyVGTp"
     }
   ],
   "categories": [
