@@ -4,6 +4,8 @@ import { VPostSchema } from "./validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category } from "../../../types/categories";
 import { useEffect, useState } from "react";
+import FormInput from "../../../components/Form/formInput";
+import { FormLabel } from "../../../components/Form/formLabel";
 
 type Props = {
   categories: Category[];
@@ -35,20 +37,14 @@ const PostFrm: React.FC<Props> = (props: Props) => {
     return (
       <>
         <div className="space-y-3">
-        <div>
-          <label
-            htmlFor="title"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            {...register("title")}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="post title"
-          />
+          <div>
+            <FormLabel name="title" label="Title" />
+            <FormInput<Resources>
+              id="title"
+              type="text"
+              name="title"
+              register={register}
+              placeholder="post title" />
           {errors.title && (
             <span className=" text-sm text-red-500">
               {errors.title.message}
@@ -56,12 +52,7 @@ const PostFrm: React.FC<Props> = (props: Props) => {
           )}
         </div>
         <div>
-          <label
-            htmlFor="description"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Description
-          </label>
+          <FormLabel name="description" label="Description" />
           <textarea
               id="description"
               {...register("description")}
@@ -76,8 +67,14 @@ const PostFrm: React.FC<Props> = (props: Props) => {
           </div>
           {categories && categories.map(data => {
             return (
-            <div className="flex items-center mb-4" key={data.id}>
-                <input id={data.name} type="checkbox" {...register("categories")} value={data.id} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+              <div className="flex items-center mb-4" key={data.id}>
+                <FormInput<Resources>
+                  name="categories"
+                  id={data.name}
+                  type="checkbox"
+                  register={register}
+                  value={data.id}
+                />
                 <label htmlFor={data.name} className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{data.name}</label>
             </div>
             )

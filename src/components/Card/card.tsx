@@ -4,7 +4,7 @@ import { Resources } from "../../types/resources";
 
 interface CardProps {
 data: Resources;
-linkTo: (id: number) => void;
+linkTo: (id: string) => void;
 }
 
 const Card: React.FC<CardProps> = ({ data,linkTo }) => {
