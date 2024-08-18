@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Search from "../../components/Search/search";
 import Card from "../../components/Card/card";
-import FetchData from "../../hooks/fetchData";
+import FetchData from "../../hooks/useFetchData";
 import { Resources } from "../../types/resources";
 import Alert from "../../components/Alert/alert";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
-  const { data, loading, error } = FetchData("http://localhost:3000/resources");
+  const { data, error } = FetchData("http://localhost:3000/resources");
 
   const navigate = useNavigate();
   const [originalData, setOriginalData] = useState<Resources[]>([]);
@@ -16,7 +16,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (data != null) {
-      setOriginalData(data);
+      setOriginalData((data as unknown as Resources[]));
     }
   }, [data]);
 

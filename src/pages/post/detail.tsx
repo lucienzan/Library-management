@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import FetchData from '../../hooks/fetchData';
+import FetchData from '../../hooks/useFetchData';
 import book from "../../assets/images/img_atomic_habits.jpg";
 
 const Detail = () => {

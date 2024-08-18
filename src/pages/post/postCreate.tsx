@@ -1,7 +1,7 @@
 import PostFrm from './components/postFrm'
 import { Resources } from '../../types/resources'
-import FetchCategories from '../../hooks/fetchCategories'
-import FetchData from '../../hooks/fetchData';
+import FetchCategories from '../../hooks/useFetchCategories'
+import FetchData from '../../hooks/useFetchData';
 const PostCreate = () => {
   const { data: categoryList } = FetchCategories("http://localhost:3000/categories");
   const { setPostData } = FetchData("http://localhost:3000/resources", "POST");
