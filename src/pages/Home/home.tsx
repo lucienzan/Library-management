@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Search from "../../components/Search/search";
 import Card from "../../components/Card/card";
-import FetchData from "../../hooks/useFetchData";
 import { Resources } from "../../types/resources";
 import Alert from "../../components/Alert/alert";
 import { useNavigate } from "react-router-dom";
+import { BookRepository } from "../../hooks/useFetchBook";
+import { Response } from "../../constant/errorMessages";
 
 const Home: React.FC = () => {
-  const { data, error } = FetchData("http://localhost:3000/resources");
+  //const { data, error } = FetchData("http://localhost:3000/resources");
+  const { data, error } = BookRepository.FetchBooks("books");
 
   const navigate = useNavigate();
   const [originalData, setOriginalData] = useState<Resources[]>([]);
@@ -16,7 +18,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (data != null) {
-      setOriginalData((data as unknown as Resources[]));
+      setOriginalData(data as unknown as Resources[]);
     }
   }, [data]);
 
@@ -29,10 +31,10 @@ const Home: React.FC = () => {
     setFilteredData(filtered);
   }, [originalData, searchQuery]);
 
-  if (error) {
+  if (error.length > 0) {
     return (
       <>
-        <Alert message="Fetching data error" />
+        <Alert message={error} />
       </>
     );
   }
@@ -56,15 +58,15 @@ const Home: React.FC = () => {
         >
           Create
         </button>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {!!filteredData && filteredData.length > 0 ? (
-            filteredData.map((item) => (
+        {!!filteredData && filteredData.length > 0 ? (
+          filteredData.map((item) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <Card key={item.id} data={item} linkTo={showDetailPageHandler} />
-            ))
-          ) : (
-            <h1>No data</h1>
-          )}
-        </div>
+            </div>
+          ))
+        ) : (
+          <h1>{Response.message.emptyData}</h1>
+        )}
       </div>
     </>
   );
