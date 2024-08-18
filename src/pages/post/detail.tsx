@@ -1,10 +1,11 @@
 import { useParams } from 'react-router-dom';
-import FetchData from '../../hooks/useFetchData';
 import book from "../../assets/images/img_atomic_habits.jpg";
+import { BookRepository } from "../../hooks/useFetchBook";
 
 const Detail = () => {
   const { id } = useParams();
-  const { data: post, loading, error } = FetchData(`http://localhost:3000/resources/${id}`);
+  //const { data: post, loading, error } = FetchData(`http://localhost:3000/resources/${id}`);
+  const { data: post, loading, error } = BookRepository.GetBook("books",id as string);
   return (
     <>
       {error && <p>Someing went wrong</p>}

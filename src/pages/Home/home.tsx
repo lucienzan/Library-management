@@ -60,8 +60,8 @@ const Home: React.FC = () => {
         </button>
         {!!filteredData && filteredData.length > 0 ? (
           filteredData.map((item) => (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <Card key={item.id} data={item} linkTo={showDetailPageHandler} />
+            <div key={item.id} className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <Card data={item} linkTo={showDetailPageHandler} />
             </div>
           ))
         ) : (
