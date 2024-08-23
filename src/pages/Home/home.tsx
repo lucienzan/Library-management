@@ -58,15 +58,17 @@ const Home: React.FC = () => {
         >
           Create
         </button>
-        {!!filteredData && filteredData.length > 0 ? (
-          filteredData.map((item) => (
-            <div key={item.id} className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <Card data={item} linkTo={showDetailPageHandler} />
-            </div>
-          ))
-        ) : (
-          <h1>{Response.message.emptyData}</h1>
-        )}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {!!filteredData && filteredData.length > 0 ? (
+            filteredData.map((item) => (
+              <Card key={item.id} data={item} linkTo={showDetailPageHandler} />
+            ))
+          ) : (
+            <h1 className="col-span-2 md:col-span-4 text-center">
+              {Response.message.emptyData}
+            </h1>
+          )}
+        </div>
       </div>
     </>
   );

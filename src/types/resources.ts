@@ -3,4 +3,5 @@ export type Resources = {
   title: string;
   description: string;
   categories: string[];
+  date?: Date;
 }

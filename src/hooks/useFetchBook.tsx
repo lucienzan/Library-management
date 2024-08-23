@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Resources } from '../types/resources';
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import { Response } from '../constant/errorMessages';
 
-// fetch all books from database
+// fetch all books from firebase
 const FetchBooks = (collectionName:string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -14,7 +14,8 @@ const FetchBooks = (collectionName:string) => {
     setLoading(true);
     // set db and collection name
     const ref = collection(db, collectionName);
-    getDocs(ref).then(snapshot => {
+    const q = query(ref, orderBy('date','desc'));
+    getDocs(q).then(snapshot => {
       if (snapshot.empty) {
         setError(Response.message.somethingWrong);
         setLoading(false);
@@ -35,7 +36,7 @@ const FetchBooks = (collectionName:string) => {
   return { data, error, loading };
 }
 
-// get specific book from database with id
+// get specific book from firebase with id
 const GetBook = (collectionName:string, id:string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -63,7 +64,28 @@ const GetBook = (collectionName:string, id:string) => {
   return { data, error, loading };
 }
 
+// create book to store into firebase
+const CreateBook = (collectionName:string) => {
+  const [postData, setPostData] = useState<Resources | null>(null);
+
+  useEffect(() => {
+    if (postData != null) {
+      const newPostData = {
+        ...postData,
+        date: serverTimestamp(), // Add the date field
+      };
+
+      const ref = collection(db, collectionName);
+      addDoc(ref, newPostData);
+    }
+
+  },[postData, collectionName])
+
+  return {setPostData}
+}
+
 export const BookRepository = {
   FetchBooks,
-  GetBook
+  GetBook,
+  CreateBook
 };

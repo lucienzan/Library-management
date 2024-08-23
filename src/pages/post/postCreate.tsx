@@ -1,17 +1,18 @@
 import PostFrm from './components/postFrm'
 import { Resources } from '../../types/resources'
 import FetchCategories from '../../hooks/useFetchCategories'
-import FetchData from '../../hooks/useFetchData';
+import { BookRepository } from '../../hooks/useFetchBook';
 const PostCreate = () => {
   const { data: categoryList } = FetchCategories("http://localhost:3000/categories");
-  const { setPostData } = FetchData("http://localhost:3000/resources", "POST");
+  //const { setPostData } = FetchData("http://localhost:3000/resources", "POST");
+  const { setPostData } = BookRepository.CreateBook("books");
 
   const PostCreateHandler = async (data: Resources) => {
-    const { categories } = data;
+    const { categories } = await data;
     categories.forEach(id => {
-      const matchingItem = categoryList.find(item => id == item.id);
+    const matchingItem = categoryList.find(item => id == item.id);
       if (matchingItem) {
-        data.categories.splice(data.categories.indexOf(id),1,matchingItem.name);
+        categories.splice(data.categories.indexOf(id),1,matchingItem.name);
       }
     });
     setPostData(data);
