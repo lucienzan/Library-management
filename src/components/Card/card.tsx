@@ -1,18 +1,20 @@
 import React from "react";
 import Book from "../../assets/images/img_atomic_habits.jpg";
 import { Resources } from "../../types/resources";
+import trash from "../../assets/icon/trash_ico.svg";
 
 interface CardProps {
-data: Resources;
-linkTo: (id: string) => void;
+  data: Resources;
+  linkTo: (id: string) => void;
+  removeCard: (e: React.MouseEvent<HTMLImageElement>,id: string) => void;
 }
 
-const Card: React.FC<CardProps> = ({ data,linkTo }) => {
+const Card: React.FC<CardProps> = ({ data, linkTo, removeCard }) => {
   return (
     <>
       <div
         className="block max-w-sm bg-white border overflow-hidden border-gray-200 rounded-2xl shadow"
-        onClick={()=>linkTo(data.id)}
+        onClick={() => linkTo(data.id)}
       >
         <div className="h-[200px] relative overflow-hidden">
           <img
@@ -38,11 +40,12 @@ const Card: React.FC<CardProps> = ({ data,linkTo }) => {
           </div>
         </div>
         <div className="p-5">
-          <h5
-            className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white"
-          >
-            {data.title}
-          </h5>
+          <div className="flex justify-between items-center">
+            <h5 className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {data.title}
+            </h5>
+            <img src={trash} alt="trash icon" onClick={(e) => removeCard(e,data.id)} />
+          </div>
           <div className="flex flex-wrap">
             {!!data.categories &&
               data.categories.map((item, id) => {

@@ -5,7 +5,7 @@ import { BookRepository } from "../../hooks/useFetchBook";
 const Detail = () => {
   const { id } = useParams();
   //const { data: post, loading, error } = FetchData(`http://localhost:3000/resources/${id}`);
-  const { data: post, loading, error } = BookRepository.GetBook("books",id as string);
+  const { data: post, loading, error } = BookRepository.useGetBook(id as string);
   return (
     <>
       {error && <p>Someing went wrong</p>}

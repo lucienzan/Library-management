@@ -9,7 +9,7 @@ import { Response } from "../../constant/errorMessages";
 
 const Home: React.FC = () => {
   //const { data, error } = FetchData("http://localhost:3000/resources");
-  const { data, error } = BookRepository.FetchBooks("books");
+  const { data, error } = BookRepository.useFetchBooks();
 
   const navigate = useNavigate();
   const [originalData, setOriginalData] = useState<Resources[]>([]);
@@ -43,6 +43,15 @@ const Home: React.FC = () => {
     navigate(`/post/detail/${id}`);
   };
 
+  const RemoveHandler = async (e: React.MouseEvent<HTMLImageElement>, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const removeStatus = await BookRepository.useDeleteBook(id);
+    if (removeStatus) {
+      setOriginalData(prev => prev.filter(b => b.id != id));
+    }
+  }
+
   const findItem = (text: string) => {
     setSearchQuery(text.toLowerCase());
   };
@@ -61,7 +70,7 @@ const Home: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {!!filteredData && filteredData.length > 0 ? (
             filteredData.map((item) => (
-              <Card key={item.id} data={item} linkTo={showDetailPageHandler} />
+              <Card key={item.id} data={item} linkTo={showDetailPageHandler} removeCard={RemoveHandler} />
             ))
           ) : (
             <h1 className="col-span-2 md:col-span-4 text-center">

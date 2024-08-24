@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Resources } from '../types/resources';
-import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import { Response } from '../constant/errorMessages';
 
+const collectionName = "books";
 // fetch all books from firebase
-const FetchBooks = (collectionName:string) => {
+const useFetchBooks = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [data, setData] = useState<Resources[] | null>([]);
@@ -17,7 +18,6 @@ const FetchBooks = (collectionName:string) => {
     const q = query(ref, orderBy('date','desc'));
     getDocs(q).then(snapshot => {
       if (snapshot.empty) {
-        setError(Response.message.somethingWrong);
         setLoading(false);
       } else {
         const booksData: Resources[] = snapshot.docs.map(doc => {
@@ -32,12 +32,12 @@ const FetchBooks = (collectionName:string) => {
       setError(Response.message.fetchError.replace("{0}",error));
     });
 
-  },[collectionName])
+  },[])
   return { data, error, loading };
 }
 
 // get specific book from firebase with id
-const GetBook = (collectionName:string, id:string) => {
+const useGetBook = (id:string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [data, setData] = useState<Resources | null>(null);
@@ -60,12 +60,12 @@ const GetBook = (collectionName:string, id:string) => {
       setError(Response.message.fetchError.replace("{0}",error));
     });
 
-  },[collectionName,id])
+  },[id])
   return { data, error, loading };
 }
 
 // create book to store into firebase
-const CreateBook = (collectionName:string) => {
+const useCreateBook = () => {
   const [postData, setPostData] = useState<Resources | null>(null);
 
   useEffect(() => {
@@ -79,13 +79,27 @@ const CreateBook = (collectionName:string) => {
       addDoc(ref, newPostData);
     }
 
-  },[postData, collectionName])
+  },[postData])
 
   return {setPostData}
 }
 
+// delete a specific doc
+const useDeleteBook = async (id: string): Promise<boolean> => {
+  try {
+    const ref = doc(db, collectionName, id);
+    await deleteDoc(ref);
+    console.log(`Document with ID ${id} deleted successfully.`);
+    return true;
+  } catch (error) {
+    console.error("Error deleting document: ", error);
+    return false;
+  }
+};
+
 export const BookRepository = {
-  FetchBooks,
-  GetBook,
-  CreateBook
+  useFetchBooks,
+  useGetBook,
+  useCreateBook,
+  useDeleteBook
 };

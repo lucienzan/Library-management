@@ -5,7 +5,7 @@ import { BookRepository } from '../../hooks/useFetchBook';
 const PostCreate = () => {
   const { data: categoryList } = FetchCategories("http://localhost:3000/categories");
   //const { setPostData } = FetchData("http://localhost:3000/resources", "POST");
-  const { setPostData } = BookRepository.CreateBook("books");
+  const { setPostData } = BookRepository.useCreateBook();
 
   const PostCreateHandler = async (data: Resources) => {
     const { categories } = await data;
