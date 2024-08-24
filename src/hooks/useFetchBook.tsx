@@ -1,8 +1,19 @@
-import { useEffect, useState } from 'react'
-import { Resources } from '../types/resources';
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { Resources } from "../types/resources";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
-import { Response } from '../constant/errorMessages';
+import { Response } from "../constant/errorMessages";
 
 const collectionName = "books";
 // fetch all books from firebase
@@ -15,29 +26,30 @@ const useFetchBooks = () => {
     setLoading(true);
     // set db and collection name
     const ref = collection(db, collectionName);
-    const q = query(ref, orderBy('date','desc'));
-    getDocs(q).then(snapshot => {
-      if (snapshot.empty) {
-        setLoading(false);
-      } else {
-        const booksData: Resources[] = snapshot.docs.map(doc => {
-          const data = doc.data() as Omit<Resources, 'id'>; // Exclude 'id' from the spread
+    const q = query(ref, orderBy("date", "desc"));
+    getDocs(q)
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          setLoading(false);
+        } else {
+          const booksData: Resources[] = snapshot.docs.map((doc) => {
+            const data = doc.data() as Omit<Resources, "id">; // Exclude 'id' from the spread
             return { id: doc.id, ...data }; // Manually add the 'id' back
           });
-        setData(booksData);
-        setError("");
-        setLoading(false);
-      }
-    }).catch(error => {
-      setError(Response.message.fetchError.replace("{0}",error));
-    });
-
-  },[])
+          setData(booksData);
+          setError("");
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        setError(Response.message.fetchError.replace("{0}", error));
+      });
+  }, []);
   return { data, error, loading };
-}
+};
 
 // get specific book from firebase with id
-const useGetBook = (id:string) => {
+const useGetBook = (id: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [data, setData] = useState<Resources | null>(null);
@@ -46,23 +58,27 @@ const useGetBook = (id:string) => {
     setLoading(true);
     // set db, collection name and id
     const ref = doc(db, collectionName, id);
-    getDoc(ref).then(snapshot => {
-      if (!snapshot.exists()) {
-        setError(Response.message.somethingWrong);
-        setLoading(false);
-      } else {
-        const bookData: Resources = { id: snapshot.id, ...snapshot.data() as Omit<Resources, "id"> };
-        setData(bookData);
-        setError("");
-        setLoading(false);
-      }
-    }).catch(error => {
-      setError(Response.message.fetchError.replace("{0}",error));
-    });
-
-  },[id])
+    getDoc(ref)
+      .then((snapshot) => {
+        if (!snapshot.exists()) {
+          setError(Response.message.somethingWrong);
+          setLoading(false);
+        } else {
+          const bookData: Resources = {
+            id: snapshot.id,
+            ...(snapshot.data() as Omit<Resources, "id">),
+          };
+          setData(bookData);
+          setError("");
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        setError(Response.message.fetchError.replace("{0}", error));
+      });
+  }, [id]);
   return { data, error, loading };
-}
+};
 
 // create book to store into firebase
 const useCreateBook = () => {
@@ -78,11 +94,28 @@ const useCreateBook = () => {
       const ref = collection(db, collectionName);
       addDoc(ref, newPostData);
     }
+  }, [postData]);
 
-  },[postData])
+  return { setPostData };
+};
 
-  return {setPostData}
-}
+const useUpdateBook = () => {
+  const updateBook = async (id: string, data: Resources) => {
+    try {
+      const newPostData = {
+        ...data,
+        date: serverTimestamp(),
+      };
+
+      const ref = doc(db, collectionName, id);
+      await updateDoc(ref, newPostData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return { updateBook };
+};
 
 // delete a specific doc
 const useDeleteBook = async (id: string): Promise<boolean> => {
@@ -101,5 +134,6 @@ export const BookRepository = {
   useFetchBooks,
   useGetBook,
   useCreateBook,
-  useDeleteBook
+  useUpdateBook,
+  useDeleteBook,
 };

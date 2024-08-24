@@ -8,6 +8,7 @@ import FormInput from "../../../components/Form/formInput";
 import { FormLabel } from "../../../components/Form/formLabel";
 
 type Props = {
+  defaultValue?: Resources;
   categories: Category[];
   onSubmit: SubmitHandler<Resources>;
   pageName: "create" | "edit";
@@ -17,6 +18,7 @@ const PostFrm: React.FC<Props> = (props: Props) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const methods = useForm<Resources>({
+    defaultValues: props.defaultValue,
     reValidateMode: "onSubmit",
     resolver:
       props.pageName == "edit"
@@ -31,7 +33,7 @@ const PostFrm: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     setCategories(props.categories);
-  },[categories,props.categories])
+  },[props.categories])
 
   const PostFrmView = () => {
     return (

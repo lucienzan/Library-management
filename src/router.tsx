@@ -3,6 +3,8 @@ import App from "./App";
 import Home from "./pages/home/home";
 import Detail from "./pages/post/detail";
 import PostCreate from "./pages/post/postCreate";
+import PostEdit from "./pages/post/postEdit";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/post/create",
         element: <PostCreate/>
+      },
+      {
+        path: "/post/edit/:id",
+        element: <PostEdit/>
       }
     ]
   },
